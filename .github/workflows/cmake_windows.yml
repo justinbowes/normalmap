@@ -2,9 +2,9 @@ name: CMake_Windows
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+      - '*'
+
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -36,6 +36,17 @@ jobs:
     - name: Set current date as env variable
       id: datee
       run: echo ::set-output name=currentdate::$(date +'%Y-%m-%d')
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: true
+        release_name: "v0.2.0-win64-${{steps.datee.outputs.currentdate}}"
+        tag_name: ${{ github.ref }}
+        body_path: README.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       
     - name: Echo current release
       run: echo "v0.2.0-win64-${{steps.datee.outputs.datee}}"
@@ -48,11 +59,15 @@ jobs:
       id: envname
       run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }} - ${{steps.datee.outputs.currentdate}}"
       
-    - uses: actions/checkout@v1
-    - uses: ncipollo/release-action@v1
+    - name: Upload Windows Artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-        artifacts: "D:/a/normalmap/normalmap/win64/build/Release/normalmap.exe"
-        tag: "v0.2.0-win64-${{steps.datee.outputs.currentdate}}"
-        bodyFile: "${{github.workspace}}/README.md"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./win64/build/Release/normalmap.exe
+        asset_name: normalmap.exe
+        asset_content_type: application/vnd.microsoft.portable-executable
+
+
    
