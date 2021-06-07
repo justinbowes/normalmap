@@ -31,7 +31,15 @@ jobs:
       working-directory: ${{github.workspace}}/win64
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/win64/build --config ${{env.BUILD_TYPE}}
-   
+      
+    
+    - name: Set current date as env variable
+      id: datee
+      run: echo ::set-output name=pr_title::$(date +'%Y-%m-%dT%H:%M:%S')
+      
+    - name: Echo current release
+      run: echo "v0.2.0-win64-${{steps.datee.outputs.datee}}"
+        
     - name: Get branch names
       id: branch-name
       uses: tj-actions/branch-names@v4.3
@@ -44,7 +52,7 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "D:/a/normalmap/normalmap/win64/build/Release/normalmap.exe"
-        tag: "v0.2.0-win64"
+        tag: "v0.2.0-win64-${{steps.datee.outputs.datee}}"
         bodyFile: "${{github.workspace}}/README.md"
         token: ${{ secrets.GITHUB_TOKEN }}
    
