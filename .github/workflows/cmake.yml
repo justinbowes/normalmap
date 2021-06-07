@@ -37,19 +37,17 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ls
       
-    - name: Use action
-      id: get-branch
-      uses: ypicard/get-branch-name-github-action@v1
-    - name: Echo outpus
-      run: echo "name=${{ steps.get-branch.outputs.branch }} - tag=${{ steps.get-branch.outputs.tag }}"
-  
+    - name: Get branch names
+      id: branch-name
+      uses: tj-actions/branch-names@v4.3
+        
     - name: Release Linux
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: true
-        title: ${{ steps.get-branch.outputs.name }}${{steps.get-branch.outputs.tag }}
+        title: ${{ steps.branch-name.outputs.current_branch}}${{steps.branch-name.outputs.tag}}
         files: |
           ${{github.workspace}}/build/normalmap
           ${{github.workspace}}/README.md
