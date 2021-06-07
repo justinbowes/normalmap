@@ -2,8 +2,7 @@ name: CMake_Windows
 
 on:
   push:
-    tags:
-      - '*'
+    branches: [ master ]
 
 
 env:
