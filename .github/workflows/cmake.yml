@@ -37,13 +37,19 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ls
       
+    - uses: little-core-labs/get-git-tag@v3.0.1
+      id: tagName
+      with:
+        tagRegex: "v*"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+        tagRegexGroup: 1 # Optional. Default is 1.
+          
     - name: Get branch names
       id: branch-name
       uses: tj-actions/branch-names@v4.3
       
     - name: Set env
       id: envname
-      run: echo ::set-output name=pr_title::"Linux build - ${GITHUB_REF#refs/*/}-${{ steps.branch-name.outputs.current_branch }}"
+      run: echo ::set-output name=pr_title::"Linux build - ${{ steps.tagName.outputs.tag}}-${{ steps.branch-name.outputs.current_branch }}"
         
     - name: Release Linux
       uses: "marvinpinto/action-automatic-releases@latest"
