@@ -41,14 +41,14 @@ jobs:
       with:
         draft: false
         prerelease: true
-        release_name: "v0.2.0-win64-${{steps.datee.outputs.currentdate}}"
+        release_name: "v0.2.0-win64-$(date +'%Y-%m-%d')"
         tag_name: ${{ github.ref }}
         body_path: README.md
       env:
         GITHUB_TOKEN: ${{ github.token }}
       
     - name: Echo current release
-      run: echo "v0.2.0-win64-${{steps.datee.outputs.datee}}"
+      run: echo "v0.2.0-win64-$(date +'%Y-%m-%d')"
         
     - name: Get branch names
       id: branch-name
@@ -56,7 +56,7 @@ jobs:
       
     - name: Set env
       id: envname
-      run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }} - ${{steps.datee.outputs.currentdate}}"
+      run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }} - $(date +'%Y-%m-%d')"
       
     - name: Upload Windows Artifact
       uses: actions/upload-release-asset@v1
