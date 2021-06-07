@@ -49,7 +49,7 @@ jobs:
       
     - name: Set env
       id: envname
-      run: echo ::set-output name=pr_title::"Linux build - ${{ steps.tagName.outputs.tag}}-${{ steps.branch-name.outputs.current_branch }}"
+      run: echo ::set-output name=pr_title::"Linux build - ${{ github.event.release.tag_name }} - ${{ steps.branch-name.outputs.current_branch }}"
         
     - name: Release Linux
       uses: "marvinpinto/action-automatic-releases@latest"
