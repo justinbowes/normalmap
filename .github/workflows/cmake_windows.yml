@@ -22,21 +22,16 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Configure CMake
+      working-directory: ${{github.workspace}}/win64
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/win64/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
+      working-directory: ${{github.workspace}}/win64
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-
-    - name: CheckBuildFolder
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.  
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ls
-          
+      run: cmake --build ${{github.workspace}}/win64/build --config ${{env.BUILD_TYPE}}
+   
     - name: Get branch names
       id: branch-name
       uses: tj-actions/branch-names@v4.3
@@ -44,7 +39,7 @@ jobs:
     - name: Set env
       id: envname
       run: echo ::set-output name=pr_title::"Windows build - v0.2.0 - ${{ steps.branch-name.outputs.current_branch }}"
-        
+      
     - name: Release Linux
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
@@ -53,6 +48,6 @@ jobs:
         prerelease: true
         title: ${{steps.envname.outputs.pr_title}}
         files: |
-          ${{github.workspace}}/build/normalmap
+          ${{github.workspace}}/win64/build/Release/normalmap.exe
           ${{github.workspace}}/README.md
          
