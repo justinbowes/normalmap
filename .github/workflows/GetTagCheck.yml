@@ -1,0 +1,30 @@
+name: CMake
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get tag
+  # You may pin to the exact commit or the version.
+  # uses: dawidd6/action-get-tag@66f78e9796155499bd32b3bc4993b793c34096be
+      uses: dawidd6/action-get-tag@v1.0.0
+      
+    - name: Use tag
+      run: echo ${{steps.tag.outputs.tag}}
+      
+      
