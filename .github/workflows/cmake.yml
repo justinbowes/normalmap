@@ -34,7 +34,7 @@ jobs:
       
     - name: Set current date as env variable
       id: datee
-      run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d%_%H%M%S')"
+      run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d_%H%M%S')"
 
     - name: Set env
       id: envname
