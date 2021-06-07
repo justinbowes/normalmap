@@ -34,11 +34,11 @@ jobs:
     
     - name: Set current date as env variable
       id: datee
-      run: echo ::set-output name=currentdate::$(date +'%Y-%m-%d')
+      run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d')"
 
     - name: Set env
       id: envname
-      run: echo ::set-output name=outname::${{ steps.branch-name.outputs.current_branch }}${{ steps.datee.outputs.currentdate }}
+      run: echo "::set-output name=outname::${{ steps.branch-name.outputs.current_branch }}${{ steps.datee.outputs.currentdate }}"
       
           
     - name: Echo current env
