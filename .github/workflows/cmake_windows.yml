@@ -38,7 +38,7 @@ jobs:
 
     - name: Set env
       id: envname
-      run: echo "::set-output name=outname::${{ steps.versionnumb.outputs.currentversion }}-${{ steps.oschoice.outputs.choice }}-${{ steps.branch-name.outputs.current_branch }}-${{ steps.datee.outputs.currentdate }}"
+      run: echo "::set-output name=outname::${{ steps.branch-name.outputs.current_branch }}-${{ steps.oschoice.outputs.choice }}-${{ steps.datee.outputs.currentdate }}"
           
     - name: Echo current env
       run: echo ${{ steps.envname.outputs.outname }}
