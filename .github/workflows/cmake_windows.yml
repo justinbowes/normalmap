@@ -40,13 +40,10 @@ jobs:
       id: envname
       run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }}"
       
-    - name: Release Windows
-    
-      uses: "marvinpinto/action-automatic-releases@latest"
+    - uses: actions/checkout@v1
+    - uses: ncipollo/release-action@v1
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "v0.2.0-win64"
-        prerelease: true
-        title: ${{steps.envname.outputs.pr_title}}
-        files: D:\a\normalmap\normalmap\win64\build\Release\normalmap.exe
-          
+        artifacts: "D:/a/normalmap/normalmap/win64/build/Release/normalmap.exe"
+        bodyFile: "${{github.workspace}}/README.md"
+        token: ${{ secrets.GITHUB_TOKEN }}
+   
