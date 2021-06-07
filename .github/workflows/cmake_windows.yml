@@ -35,7 +35,7 @@ jobs:
     
     - name: Set current date as env variable
       id: datee
-      run: echo ::set-output name=pr_title::$(date +'%Y-%m-%dT%H:%M:%S')
+      run: echo ::set-output name=currentdate::$(date +'%Y-%m-%d')
       
     - name: Echo current release
       run: echo "v0.2.0-win64-${{steps.datee.outputs.datee}}"
@@ -46,13 +46,13 @@ jobs:
       
     - name: Set env
       id: envname
-      run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }}"
+      run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }} - ${{steps.datee.outputs.currentdate}}"
       
     - uses: actions/checkout@v1
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "D:/a/normalmap/normalmap/win64/build/Release/normalmap.exe"
-        tag: "v0.2.0-win64-${{steps.datee.outputs.datee}}"
+        tag: "v0.2.0-win64-${{steps.datee.outputs.currentdate}}"
         bodyFile: "${{github.workspace}}/README.md"
         token: ${{ secrets.GITHUB_TOKEN }}
    
