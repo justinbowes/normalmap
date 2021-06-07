@@ -8,6 +8,7 @@ include_directories(include)
 
 set(SOURCE_FILES
         include/stb_image.h
+        include/mem.h
         src/main.c
         src/stb_image.c
         src/normalmap.c
