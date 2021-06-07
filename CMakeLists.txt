@@ -15,4 +15,5 @@ set(SOURCE_FILES
         include/normalmap.h include/stb_image_write.h src/stb_image_write.c)
 
 add_executable(normalmap ${SOURCE_FILES})
+
 target_link_libraries(normalmap PRIVATE m)
