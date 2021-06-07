@@ -38,16 +38,16 @@ jobs:
       
     - name: Set env
       id: envname
-      run: echo ::set-output name=pr_title::"Windows build - v0.2.0 - ${{ steps.branch-name.outputs.current_branch }}"
+      run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }}"
       
-    - name: Release Linux
+    - name: Release Windows
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "v0.2.0"
+        automatic_release_tag: "v0.2.0-win64"
         prerelease: true
         title: ${{steps.envname.outputs.pr_title}}
         files: |
-          ${{github.workspace}}/win64/build/Release/normalmap.exe
-          ${{github.workspace}}/README.md
+          ${{github.workspace}}\win64\build\Release\normalmap.exe
+          ${{github.workspace}}\README.md
          
