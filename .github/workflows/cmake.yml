@@ -40,6 +40,9 @@ jobs:
     - name: Get branch names
       id: branch-name
       uses: tj-actions/branch-names@v4.3
+      
+    - name: Set env
+      run: echo ::set-env name=STEPVAR::${{ steps.branch-name.outputs.tag }}-${{ steps.branch-name.outputs.current_branch }}
         
     - name: Release Linux
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -47,7 +50,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: true
-        title: ${{ steps.branch-name.outputs.tag}}
+        title: ${{STEPVAR}}
         files: |
           ${{github.workspace}}/build/normalmap
           ${{github.workspace}}/README.md
