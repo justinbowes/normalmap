@@ -44,6 +44,7 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "D:/a/normalmap/normalmap/win64/build/Release/normalmap.exe"
+        tag: "v0.2.0-win64"
         bodyFile: "${{github.workspace}}/README.md"
         token: ${{ secrets.GITHUB_TOKEN }}
    
