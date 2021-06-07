@@ -1,4 +1,5 @@
 # normalmap
+
 Command line utility to convert height maps to DU-DV normal maps.
 
 ## Platforms
@@ -15,6 +16,7 @@ The height will be taken from the red channel of the source image. RGBA PNGs are
 
 The output will be an unfiltered, 8-bit unsigned du/dv map, which can be used as a normal map in rendering applications. The heightmap sampler is a 2x2 box.
 
+## How to Update
 The underlying normal map generation code is inherited from The GIMP and is considerably more flexible. In this version, you must update `main.c` and rebuild to change the following settings:
 
 * Scale *default = 2.0*
