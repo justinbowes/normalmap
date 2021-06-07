@@ -47,7 +47,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: true
-        title: ${{ steps.branch-name.outputs.current_branch}{steps.branch-name.outputs.tag}}
+        title: ${{ steps.branch-name.outputs.tag}}
         files: |
           ${{github.workspace}}/build/normalmap
           ${{github.workspace}}/README.md
