@@ -38,7 +38,7 @@ jobs:
 
     - name: Set env
       id: envname
-      run: echo ::set-output name=outname::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }} - ${{ steps.datee.outputs.currentdate }}"
+      run: echo ::set-output name=outname::${{ steps.branch-name.outputs.current_branch }}${{ steps.datee.outputs.currentdate }}
       
           
     - name: Echo current env
