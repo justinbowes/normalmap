@@ -65,15 +65,36 @@ jobs:
       with:
         tagRegex: "v*"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
         tagRegexGroup: 1 # Optional. Default is 1.
-
-    - name: Release Linux
-      uses: "marvinpinto/action-automatic-releases@latest"
+        
+    - name: Generate Changelog
+      id: changeloggen
+      uses: heinrichreimer/github-changelog-generator-action@v2.1.1
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: ${{ steps.envname.outputs.outname }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+        
+        
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
         prerelease: true
-        title: ${{ steps.envname.outputs.outname }}
-        files: |
-          ${{github.workspace}}/build/normalmap
-          ${{github.workspace}}/README.md
-         
+        release_name: ${{ steps.envname.outputs.outname }}
+        tag_name: ${{ steps.envname.outputs.outname }}
+        body: ${{ steps.changeloggen.outputs.changelog }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+
+    - name: upload linux artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/normalmap
+        asset_name: normalmap
+        asset_content_type: application/x-executable
+      
+      
