@@ -56,6 +56,14 @@ jobs:
       run: cmake --build ${{github.workspace}}/win64/build --config ${{env.BUILD_TYPE}}
 
       
+    - name: Generate Changelog
+      id: changeloggen
+      uses: heinrichreimer/github-changelog-generator-action@v2.1.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+        
+        
     - name: release
       uses: actions/create-release@v1
       id: create_release
@@ -64,7 +72,7 @@ jobs:
         prerelease: true
         release_name: ${{ steps.envname.outputs.outname }}
         tag_name: ${{ steps.envname.outputs.outname }}
-        body_path: README.md
+        body: ${{ steps.changeloggen.outputs.changelog }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
       
