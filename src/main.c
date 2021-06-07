@@ -46,19 +46,19 @@ int main(int argc, const char **argv) {
     }
 
     const char *ext = get_filename_ext(outfile);
-    if (strcmpi("png", ext) == 0) {
+    if (strcmp("png", ext) == 0) {
         if (!stbi_write_png(outfile, x, y, 4, image_out, 0)) {
             fprintf(stderr, "Unable to write PNG %s", outfile);
         }
-    } else if (strcmpi("bmp", ext) == 0) {
+    } else if (strcmp("bmp", ext) == 0) {
         if (!stbi_write_bmp(outfile, x, y, 4, image_out)) {
             fprintf(stderr, "Unable to write BMP %s", outfile);
         }
-    } else if (strcmpi("tga", ext) == 0) {
+    } else if (strcmp("tga", ext) == 0) {
         if (!stbi_write_tga(outfile, x, y, 4, image_out)) {
             fprintf(stderr, "Unable to write TGA %s", outfile);
         }
-//    } else if (strcmpi("hdr", ext) == 0) {
+//    } else if (strcmp("hdr", ext) == 0) {
 //        if (!stbi_write_hdr(outfile, x, y, 4, image_out)) {
 //            fprintf(stderr, "Unable to write HDR %s", outfile);
 //        }
