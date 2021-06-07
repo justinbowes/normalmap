@@ -20,7 +20,30 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set current version as env variable
+      id: versionnumb
+      run: echo "::set-output name=currentversion::v0.2.0"
+                  
+    - name: Get branch names
+      id: branch-name
+      uses: tj-actions/branch-names@v4.3
+     
+    - name: Set current os as env variable
+      id: oschoice
+      run: echo "::set-output name=choice::windows64"
+      
+    - name: Set current date as env variable
+      id: datee
+      run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d')"
 
+    - name: Set env
+      id: envname
+      run: echo "::set-output name=outname::${{ steps.branch-name.outputs.current_branch }}-${{ steps.oschoice.outputs.choice }}-${{ steps.datee.outputs.currentdate }}"
+          
+    - name: Echo current env
+      run: echo ${{ steps.envname.outputs.outname }}
+        
+        
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
@@ -42,22 +65,14 @@ jobs:
       with:
         tagRegex: "v*"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
         tagRegexGroup: 1 # Optional. Default is 1.
-          
-    - name: Get branch names
-      id: branch-name
-      uses: tj-actions/branch-names@v4.3
-      
-    - name: Set env
-      id: envname
-      run: echo ::set-output name=pr_title::"Linux build - v0.2.0 - ${{ steps.branch-name.outputs.current_branch }}"
-        
+
     - name: Release Linux
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "v0.2.0"
+        automatic_release_tag: ${{ steps.envname.outputs.outname }}
         prerelease: true
-        title: ${{steps.envname.outputs.pr_title}}
+        title: ${{ steps.envname.outputs.outname }}
         files: |
           ${{github.workspace}}/build/normalmap
           ${{github.workspace}}/README.md
