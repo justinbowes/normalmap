@@ -35,13 +35,23 @@ jobs:
     - name: Set current date as env variable
       id: datee
       run: echo ::set-output name=currentdate::$(date +'%Y-%m-%d')
+
+    - name: Set env
+      id: envname
+      run: echo ::set-output name=outname::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }} - ${{ steps.datee.outputs.currentdate }}"
+      
+          
+    - name: Echo current env
+      run: echo ${{ steps.envname.outputs.outname }}
+        
+      
     - name: release
       uses: actions/create-release@v1
       id: create_release
       with:
         draft: false
         prerelease: true
-        release_name: "v0.2.0-win64-$(date +'%Y-%m-%d')"
+        release_name: ${{ steps.envname.outputs.outname }}
         tag_name: ${{ github.ref }}
         body_path: README.md
       env:
@@ -54,10 +64,7 @@ jobs:
       id: branch-name
       uses: tj-actions/branch-names@v4.3
       
-    - name: Set env
-      id: envname
-      run: echo ::set-output name=pr_title::"Windows build - v0.2.0-win64 - ${{ steps.branch-name.outputs.current_branch }} - $(date +'%Y-%m-%d')"
-      
+
     - name: Upload Windows Artifact
       uses: actions/upload-release-asset@v1
       env:
