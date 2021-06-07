@@ -50,7 +50,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "latest"
         prerelease: true
-        title: ${{STEPVAR}}
+        title: ${{env.STEPVAR}}
         files: |
           ${{github.workspace}}/build/normalmap
           ${{github.workspace}}/README.md
