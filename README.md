@@ -33,3 +33,11 @@ The underlying normal map generation code is inherited from The GIMP and is cons
   * true "normalized" normal
 
 Note that the effect of du/dv output being unnormalized is that normal vectors constructed by sampling the map will require normalization in your shader or image loader, which means in turn that the effect of the scale parameter above is less pronounced than it would be otherwise.
+
+
+
+
+
+
+
+
