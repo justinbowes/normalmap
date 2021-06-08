@@ -66,13 +66,7 @@ jobs:
         tagRegex: "v*"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
         tagRegexGroup: 1 # Optional. Default is 1.
         
-    - name: Generate Changelog
-      id: changeloggen
-      uses: heinrichreimer/github-changelog-generator-action@v2.1.1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        
-        
+
         
     - name: release
       uses: actions/create-release@v1
@@ -82,7 +76,7 @@ jobs:
         prerelease: true
         release_name: ${{ steps.envname.outputs.outname }}
         tag_name: ${{ steps.envname.outputs.outname }}
-        body: ${{ steps.changeloggen.outputs.changelog }}
+        body_path: ${{github.workspace}}/CHANGELOG.md
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
