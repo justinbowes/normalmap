@@ -30,15 +30,21 @@ int main(int argc, const char **argv) {
         exit(-2);
     }
     uint8_t *image_out = malloc(x * y * 4);
+    struct NormalmapVals config;
+    config.filter = FILTER_NONE;
+    config.wrap = false;
+    config.conversion = CONVERT_RED;
+    config.scale = 2.0f;
+    config.dudv = DUDV_8BIT_UNSIGNED;
 
-    // TODO: expose this via command line switches.
-    NormalmapVals config = {
-            filter: FILTER_NONE,
-            wrap: false,
-            conversion: CONVERT_RED,
-            scale: 2.0f,
-            dudv: DUDV_8BIT_UNSIGNED
-    };
+    //// TODO: expose this via command line switches.
+    //struct NormalmapVals config = {
+    //        filter: FILTER_NONE,
+    //        wrap: false,
+    //        conversion: CONVERT_RED,
+    //        scale: 2.0f,
+    //        dudv: DUDV_8BIT_UNSIGNED
+    //};
 
     int32_t result;
     if ((result = normalmap(image_in, image_out, x, y, config)) != 0) {

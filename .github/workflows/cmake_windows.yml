@@ -1,0 +1,89 @@
+name: CMake_Windows
+
+on:
+  push:
+    tags:
+      - "v*"
+
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get branch names
+      id: branch-name
+      uses: tj-actions/branch-names@v4.3
+       
+    - name: Set current version as env variable
+      id: versionnumb
+      run: echo "::set-output name=currentversion::v0.2.0"
+             
+    - name: Set current os as env variable
+      id: oschoice
+      run: echo "::set-output name=choice::windows64"
+      
+    - name: Set current date as env variable
+      id: datee
+      run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d_%H%M%S')"
+
+    - name: Set env
+      id: envname
+      run: echo "::set-output name=outname::${{ steps.branch-name.outputs.current_branch }}-${{ steps.oschoice.outputs.choice }}-${{ steps.datee.outputs.currentdate }}"
+          
+    - name: Echo current env
+      run: echo ${{ steps.envname.outputs.outname }}
+        
+        
+    - name: Configure CMake
+      working-directory: ${{github.workspace}}/win64
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/win64/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      working-directory: ${{github.workspace}}/win64
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/win64/build --config ${{env.BUILD_TYPE}}
+
+      
+
+        
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: true
+        release_name: ${{ steps.envname.outputs.outname }}
+        tag_name: ${{ steps.envname.outputs.outname }}
+        body_path: ${{github.workspace}}/CHANGELOG.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      
+    - name: Echo current release
+      run: echo "v0.2.0-win64-$(date +'%Y-%m-%d')"
+        
+
+
+    - name: Upload Windows Artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./win64/build/Release/normalmap.exe
+        asset_name: normalmap.exe
+        asset_content_type: application/vnd.microsoft.portable-executable
+
+
+   

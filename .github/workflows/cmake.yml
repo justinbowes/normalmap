@@ -1,0 +1,94 @@
+name: CMake
+
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set current version as env variable
+      id: versionnumb
+      run: echo "::set-output name=currentversion::v0.2.0"
+                  
+    - name: Get branch names
+      id: branch-name
+      uses: tj-actions/branch-names@v4.3
+     
+    - name: Set current os as env variable
+      id: oschoice
+      run: echo "::set-output name=choice::linux"
+      
+    - name: Set current date as env variable
+      id: datee
+      run: echo "::set-output name=currentdate::$(date +'%Y-%m-%d_%H%M%S')"
+
+    - name: Set env
+      id: envname
+      run: echo "::set-output name=outname::${{ steps.branch-name.outputs.current_branch }}-${{ steps.oschoice.outputs.choice }}-${{ steps.datee.outputs.currentdate }}"
+          
+    - name: Echo current env
+      run: echo ${{ steps.envname.outputs.outname }}
+        
+        
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+
+    - name: CheckBuildFolder
+      working-directory: ${{github.workspace}}/build
+      # Execute tests defined by the CMake configuration.  
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ls
+      
+    - uses: little-core-labs/get-git-tag@v3.0.1
+      id: tagName
+      with:
+        tagRegex: "v*"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+        tagRegexGroup: 1 # Optional. Default is 1.
+        
+
+        
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: false
+        prerelease: true
+        release_name: ${{ steps.envname.outputs.outname }}
+        tag_name: ${{ steps.envname.outputs.outname }}
+        body_path: ${{github.workspace}}/CHANGELOG.md
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+
+    - name: upload linux artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/normalmap
+        asset_name: normalmap
+        asset_content_type: application/x-executable
+      
+      
