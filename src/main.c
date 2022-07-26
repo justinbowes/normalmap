@@ -35,7 +35,7 @@ int main(int argc, const char **argv) {
     NormalmapVals config = {
             filter: FILTER_NONE,
             wrap: false,
-            conversion: CONVERT_RED,
+            conversion: CONVERT_HEIGHTMAP,
             scale: 2.0f,
             dudv: DUDV_8BIT_UNSIGNED
     };
